@@ -42,6 +42,7 @@
 
 <script>
   import Key from './keyboard/Key.vue';
+  let { Keyboard } = require('../keyboard');
 
   // styles
   import '../styles/styles.scss';
@@ -212,7 +213,6 @@
       };
     }
   };
-  const factor = 2 ** (1 / 12);
   const reverbUrl = "http://reverbjs.org/Library/HamiltonMausoleum.m4a";
 
   export default {
@@ -221,399 +221,9 @@
       Key,
     },
     data: function () {
-      return {
-        synth: {},
-        synthSet: false,
-        reverbNode: {},
-        osc: {},
-        currentOctave: {
-          top: 3,
-          bottom: 2
-        },
-        maxVol: {
-          'top': 5,
-          'bottom': 5
-        },
-        waveForm: {
-          'top': 'sine',
-          'bottom': 'sine'
-        },
-        octaves: [55, 110, 220, 440, 880, 1760, 3520],
-        order: [
-          {
-            position: 'top', keys: [81, 50, 87, 51, 69, 82, 53, 84, 54, 90, 55, 85, 73, 57, 79, 48, 80, 219]
-          },
-          {
-            position: 'bottom', keys: [89, 83, 88, 68, 67, 86, 71, 66, 72, 78, 74, 77, 188, 76, 190, 186, 189, 16]
-          }
-        ],
-        reverb: false,
-        keys: {}
-      }
+      return new Keyboard();
     },
     created() {
-      this.keys = {
-        89: {
-          'tone': 'c4',
-          'freq': this.getFreq(-9, 'bottom'),
-          'color': 'white',
-          'key': 'y',
-          'name': 'c4',
-          'step': -9,
-          'position': 'bottom',
-          'pressed': false
-        },
-        83: {
-          'tone': 'cis4',
-          'freq': this.getFreq(-8, 'bottom'),
-          'color': 'black',
-          'key': 's',
-          'name': 'c4#',
-          'step': -8,
-          'position': 'bottom',
-          'pressed': false
-        },
-        88: {
-          'tone': 'd4',
-          'freq': this.getFreq(-7, 'bottom'),
-          'color': 'white',
-          'key': 'x',
-          'name': 'd4',
-          'step': -7,
-          'position': 'bottom',
-          'pressed': false
-        },
-        68: {
-          'tone': 'dis4',
-          'freq': this.getFreq(-6, 'bottom'),
-          'color': 'black',
-          'key': 'd',
-          'name': 'd4#',
-          'step': -6,
-          'position': 'bottom',
-          'pressed': false
-        },
-        67: {
-          'tone': 'e4',
-          'freq': this.getFreq(-5, 'bottom'),
-          'color': 'white',
-          'key': 'c',
-          'name': 'e4',
-          'step': -5,
-          'position': 'bottom',
-          'pressed': false
-        },
-        86: {
-          'tone': 'f4',
-          'freq': this.getFreq(-4, 'bottom'),
-          'color': 'white',
-          'key': 'v',
-          'name': 'f4',
-          'step': -4,
-          'position': 'bottom',
-          'pressed': false
-        },
-        71: {
-          'tone': 'fis4',
-          'freq': this.getFreq(-3, 'bottom'),
-          'color': 'black',
-          'key': 'g',
-          'name': 'f4#',
-          'step': -3,
-          'position': 'bottom',
-          'pressed': false
-        },
-        66: {
-          'tone': 'g4',
-          'freq': this.getFreq(-2, 'bottom'),
-          'color': 'white',
-          'key': 'b',
-          'name': 'g4',
-          'step': -2,
-          'position': 'bottom',
-          'pressed': false
-        },
-        72: {
-          'tone': 'gis4',
-          'freq': this.getFreq(-1, 'bottom'),
-          'color': 'black',
-          'key': 'h',
-          'name': 'g4#',
-          'step': -1,
-          'position': 'bottom',
-          'pressed': false
-        },
-        78: {
-          'tone': 'a4',
-          'freq': this.getFreq(0, 'bottom'),
-          'color': 'white',
-          'key': 'n',
-          'name': 'a4',
-          'step': 0,
-          'position': 'bottom',
-          'pressed': false
-        },
-        74: {
-          'tone': 'ais4',
-          'freq': this.getFreq(1, 'bottom'),
-          'color': 'black',
-          'key': 'j',
-          'name': 'a4#',
-          'step': 1,
-          'position': 'bottom',
-          'pressed': false
-        },
-        77: {
-          'tone': 'h4',
-          'freq': this.getFreq(2, 'bottom'),
-          'color': 'white',
-          'key': 'm',
-          'name': 'b4',
-          'step': 2,
-          'position': 'bottom',
-          'pressed': false
-        },
-        188: {
-          'tone': 'c5',
-          'freq': this.getFreq(3, 'bottom'),
-          'color': 'white',
-          'key': ',',
-          'name': 'c5',
-          'step': 3,
-          'position': 'bottom',
-          'pressed': false
-        },
-        76: {
-          'tone': 'cis5',
-          'freq': this.getFreq(4, 'bottom'),
-          'color': 'black',
-          'key': 'l',
-          'name': 'c5#',
-          'step': 4,
-          'position': 'bottom',
-          'pressed': false
-        },
-        190: {
-          'tone': 'd5',
-          'freq': this.getFreq(5, 'bottom'),
-          'color': 'white',
-          'key': '.',
-          'name': 'd5',
-          'step': 5,
-          'position': 'bottom',
-          'pressed': false
-        },
-        186: {
-          'tone': 'dis5',
-          'freq': this.getFreq(6, 'bottom'),
-          'color': 'black',
-          'key': 'ö',
-          'name': 'd5#',
-          'step': 6,
-          'position': 'bottom',
-          'pressed': false
-        },
-        189: {
-          'tone': 'e5',
-          'freq': this.getFreq(7, 'bottom'),
-          'color': 'white',
-          'key': '-',
-          'name': 'e5',
-          'step': 7,
-          'position': 'bottom',
-          'pressed': false
-        },
-        16: {
-          'tone': 'f5',
-          'freq': this.getFreq(8, 'bottom'),
-          'color': 'white',
-          'key': 'shift',
-          'name': 'f5',
-          'step': 8,
-          'position': 'bottom',
-          'pressed': false
-        },
-        81: {
-          'tone': 'c4',
-          'freq': this.getFreq(-9, 'top'),
-          'color': 'white',
-          'key': 'q',
-          'name': 'c4',
-          'step': -9,
-          'position': 'top',
-          'pressed': false
-        },
-        50: {
-          'tone': 'cis4',
-          'freq': this.getFreq(-8, 'top'),
-          'color': 'black',
-          'key': '2',
-          'name': 'c4#',
-          'step': -8,
-          'position': 'top',
-          'pressed': false
-        },
-        87: {
-          'tone': 'd4',
-          'freq': this.getFreq(-7, 'top'),
-          'color': 'white',
-          'key': 'w',
-          'name': 'd4',
-          'step': -7,
-          'position': 'top',
-          'pressed': false
-        },
-        51: {
-          'tone': 'dis4',
-          'freq': this.getFreq(-6, 'top'),
-          'color': 'black',
-          'key': '3',
-          'name': 'd4#',
-          'step': -6,
-          'position': 'top',
-          'pressed': false
-        },
-        69: {
-          'tone': 'e4',
-          'freq': this.getFreq(-5, 'top'),
-          'color': 'white',
-          'key': 'e',
-          'name': 'e4',
-          'step': -5,
-          'position': 'top',
-          'pressed': false
-        },
-        82: {
-          'tone': 'f4',
-          'freq': this.getFreq(-4, 'top'),
-          'color': 'white',
-          'key': 'r',
-          'name': 'f4',
-          'step': -4,
-          'position': 'top',
-          'pressed': false
-        },
-        53: {
-          'tone': 'fis4',
-          'freq': this.getFreq(-3, 'top'),
-          'color': 'black',
-          'key': '5',
-          'name': 'f4#',
-          'step': -3,
-          'position': 'top',
-          'pressed': false
-        },
-        84: {
-          'tone': 'g4',
-          'freq': this.getFreq(-2, 'top'),
-          'color': 'white',
-          'key': 't',
-          'name': 'g4',
-          'step': -2,
-          'position': 'top',
-          'pressed': false
-        },
-        54: {
-          'tone': 'gis4',
-          'freq': this.getFreq(-1, 'top'),
-          'color': 'black',
-          'key': '6',
-          'name': 'g4#',
-          'step': -1,
-          'position': 'top',
-          'pressed': false
-        },
-        90: {
-          'tone': 'a4',
-          'freq': this.getFreq(0, 'top'),
-          'color': 'white',
-          'key': 'z',
-          'name': 'a4',
-          'step': 0,
-          'position': 'top',
-          'pressed': false
-        },
-        55: {
-          'tone': 'ais4',
-          'freq': this.getFreq(1, 'top'),
-          'color': 'black',
-          'key': '7',
-          'name': 'a4#',
-          'step': 1,
-          'position': 'top',
-          'pressed': false
-        },
-        85: {
-          'tone': 'h4',
-          'freq': this.getFreq(2, 'top'),
-          'color': 'white',
-          'key': 'u',
-          'name': 'b4',
-          'step': 2,
-          'position': 'top',
-          'pressed': false
-        },
-        73: {
-          'tone': 'c5',
-          'freq': this.getFreq(3, 'top'),
-          'color': 'white',
-          'key': 'i',
-          'name': 'c5',
-          'step': 3,
-          'position': 'top',
-          'pressed': false
-        },
-        57: {
-          'tone': 'cis5',
-          'freq': this.getFreq(4, 'top'),
-          'color': 'black',
-          'key': '9',
-          'name': 'c5#',
-          'step': 4,
-          'position': 'top',
-          'pressed': false
-        },
-        79: {
-          'tone': 'd5',
-          'freq': this.getFreq(5, 'top'),
-          'color': 'white',
-          'key': 'o',
-          'name': 'd5',
-          'step': 5,
-          'position': 'top',
-          'pressed': false
-        },
-        48: {
-          'tone': 'dis5',
-          'freq': this.getFreq(6, 'top'),
-          'color': 'black',
-          'key': '0',
-          'name': 'd5#',
-          'step': 6,
-          'position': 'top',
-          'pressed': false
-        },
-        80: {
-          'tone': 'e5',
-          'freq': this.getFreq(7, 'top'),
-          'color': 'white',
-          'key': 'p',
-          'name': 'e5',
-          'step': 7,
-          'position': 'top',
-          'pressed': false
-        },
-        219: {
-          'tone': 'f5',
-          'freq': this.getFreq(8, 'top'),
-          'color': 'white',
-          'key': 'ü',
-          'name': 'f5',
-          'step': 8,
-          'position': 'top',
-          'pressed': false
-        }
-      };
       document.addEventListener('keydown', (e) => {
         let keyNum = e.keyCode || e.which;
         if (typeof this.keys[keyNum] !== 'undefined') {
@@ -640,9 +250,11 @@
         this.currentOctave[pos] = this.currentOctave[pos] + step;
 
         for (let key in this.keys) {
-          let item = this.keys[key];
-          if (item.position === pos) {
-            this.keys[key]['freq'] = this.getFreq(item.step, pos);
+          if (this.keys.hasOwnProperty(key)) {
+            let item = this.keys[key];
+            if (item.position === pos) {
+              this.keys[key]['freq'] = Keyboard.getFreq(item.step, pos, this.currentOctave, this.octaves);
+            }
           }
         }
       },
@@ -719,9 +331,7 @@
           this.keys[key].pressed = true;
         }
       },
-      getFreq(step, pos) {
-        return parseInt(this.octaves[this.currentOctave[pos]] * (factor ** step));
-      }
+
     },
     computed: {
       getKeys () {
