@@ -46,12 +46,12 @@ module.exports = {
         extensions: ['.ts', '.vue', '.js'],
     },
     output: {
-        filename: 'tictactoe.js',
+        filename: 'keyboard.js',
         path: path.resolve(__dirname, 'dist'),
     },
     plugins: [
         new VueLoaderPlugin(),
         new CleanWebpackPlugin(),
-        new ExtractTextPlugin('tictactoe.css'),
+        new ExtractTextPlugin('keyboard.css'),
     ]
 };

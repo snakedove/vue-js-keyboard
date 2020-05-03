@@ -1,4 +1,4 @@
-## vue-TicTacToe ##
+## vue-js-keyboard ##
 A popular game, made as vue component, ready to use.
 
 ### What is this repo for ###

@@ -1,4 +1,4 @@
 import Vue from 'vue'
-import TicTacToe from './components/TicTacToe.vue'
+import Keyboard from './components/Keyboard.vue'
 
-Vue.component('TicTacToe', TicTacToe);
+Vue.component('Keyboard', Keyboard);
