@@ -1,5 +1,5 @@
 ## vue-js-keyboard ##
-A popular game, made as vue component, ready to use.
+A virtual synthesizer, made as vue component, ready to use.
 
 ### What is this repo for ###
 * It contains a ready-to use vue component, a virtual javascript synthesizer to be playey with the keys on your keyboard or your pointer device. It is declared as a global component with `Vue.component()`, so it can be used inside the components declaration inside a vue instance or directly in the markup.
